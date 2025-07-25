@@ -1,0 +1,41 @@
+set -e
+
+#  Переменные
+IP=$(hostname -I | awk '{print $1}')
+HN=$(hostname)
+
+echo -e "\n[+] Установка Grafana на хост: $HN с IP: $IP\n"
+
+#  Обновление системы и установка базовых пакетов
+echo "[1] Обновление системы и установка зависимостей..."
+apt update -y
+apt install -y sudo curl gnupg2 ca-certificates apt-transport-https software-properties-common
+
+#  Добавление ключа Grafana
+echo "[2] Добавление GPG-ключа Grafana..."
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://packages.grafana.com/gpg.key | gpg --dearmor -o /etc/apt/keyrings/grafana.gpg
+chmod 644 /etc/apt/keyrings/grafana.gpg
+
+#  Добавление репозитория Grafana
+echo "[3] Добавление репозитория Grafana..."
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://packages.grafana.com/oss/deb stable main" > /etc/apt/sources.list.d/grafana.list
+
+#  Установка Grafana
+echo "[4] Установка Grafana..."
+apt update -y
+apt install -y grafana
+
+#  Запуск и автозагрузка сервиса
+echo "[5] Запуск и активация grafana-server..."
+systemctl daemon-reexec
+systemctl enable --now grafana-server
+
+#  Проверка статуса
+echo -e "\n[6] Проверка статуса сервиса:"
+systemctl status grafana-server --no-pager
+
+# Финальное сообщение
+echo -e "\n[] Grafana установлена и запущена."
+echo -e "[] Откройте в браузере: http://$IP:3000"
+echo -e "[] Логин: admin | Пароль: admin (по умолчанию)\n"

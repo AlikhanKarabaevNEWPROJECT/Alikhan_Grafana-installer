@@ -19,6 +19,7 @@ Bash-скрипт для автоматической установки и за
 ##  Быстрый запуск
 
 ```bash
-curl -o grafana.sh https://raw.githubusercontent.com/AlikhanKarabaevNEWPROJECT/Alikhan_Grafana-installer/main/grafana.sh
-chmod +x install-grafana.sh
-sudo ./install-grafana.sh
+curl -o grafana.sh https://raw.githubusercontent.com/AlikhanKarabaevNEWPROJECT/Alikhan_Grafana-installer/main/Bash-Grafana
+chmod +x grafana.sh
+./grafana.sh
+
